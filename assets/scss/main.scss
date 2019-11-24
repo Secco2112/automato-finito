@@ -27,10 +27,53 @@
                 #words-form{
                     width: 50%;
                     margin-left: 20px;
+                    .form-group{
+                        position: relative;
+                        input[name=fake-token-input] {
+                            position: absolute;
+                            top: 32px;
+                            z-index: -1;
+                        }
+                        .word-listener{
+                            z-index: 1;
+                            .valid{
+                                color: green;
+                            }
+                            .invalid{
+                                color: red;
+                            }
+                        }
+                    }
                 }
             }
             .table-wrapper{
                 margin-top: 40px;
+                table{
+                    thead{
+                        tr{
+                            th{
+                                text-align: center;
+                            }
+                        }
+                    }
+                    tbody{
+                        tr{
+                            td{
+                                text-align: center;
+                                transition: 0.2s all ease-in-out;
+                                &.focus-item{
+                                    background-color: #dadada;
+                                }
+                                &.focus-row, &.focus-column{
+                                    background-color: #f5f2f2;
+                                }
+                                &.focus-row-error, &.focus-column-error{
+                                    background-color: #ff9b9b;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         .words-wrapper{
