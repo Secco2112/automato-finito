@@ -35,6 +35,7 @@ function addToken() {
     $("input[name='input-token']").on("keypress", function(e) {
         if(e.key == "Enter") {
             var value = $(this).val();
+            value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
             helperAddToken(value);
             $(this).val("");
         }
@@ -48,16 +49,37 @@ function handleTestTokenInput() {
     });
 
     $("input[name=fake-token-input]").on("keyup", function(e) {
-        var text = $(this).val();
+        if(e.keyCode == 32) {
+            this.value = this.value.replace(/\s/g,'');
+        } else if(e.code == "Enter" || e.code == "NumpadEnter") {
+            var text = $(this).val();
+            text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            text = text.split(" ");
+            var word = text[0];
+            
+            var result = finite_automata.validate(word);
 
-        $(".word-listener").empty();
+            if(result) {
+                swal("Validação de token", "O token '" + word + "' é válido.", "success");
+            } else {
+                swal("Validação de token", "O token '" + word + "' é inválido.", "error");
+            }
 
-        var values = text.trim().split(" ");
-        var html = "";
-        $.each(values, function(i, word) {
-            html += "<span class='" + (finite_automata.validWord(word)? "valid": "invalid") + "'>" + word + "</span> ";
-        });
-        $(".word-listener").html(html);
+            $(".word-listener").empty();
+            $(this).val("");
+        } else {
+            var text = $(this).val();
+            text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
+            $(".word-listener").empty();
+
+            var values = text.trim().split(" ");
+            var html = "";
+            $.each(values, function(i, word) {
+                html += "<span class='" + (finite_automata.validWord(word)? "valid": "invalid") + "'>" + word + "</span> ";
+            });
+            $(".word-listener").html(html);
+        }
     });
 }
 
@@ -114,6 +136,8 @@ function generateStates() {
             if(i == word.length - 1) states[current_state]['final'] = 1;
         }
     });
+
+    console.log(states);
 
     finite_automata.setStates(states);
 }

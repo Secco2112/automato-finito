@@ -36,8 +36,10 @@
                         }
                         .word-listener{
                             z-index: 1;
+                            font-weight: 600;
+                            letter-spacing: 2px;
                             .valid{
-                                color: green;
+                                color: #0bb70b;
                             }
                             .invalid{
                                 color: red;

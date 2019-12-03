@@ -73,23 +73,33 @@ class FiniteAutomata{
     }
 
     validWord(word) {
-        var state = 0,
-            error = false;
+        if(this.draw_table.length > 0) {
+            var state = 0,
+                error = false;
 
-        this.table_element.find("td").each(function(i, td) {
-            $(td).removeClass("focus-item focus-column focus-row focus-row-error focus-column-error");
-        });
+            this.table_element.find("td").each(function(i, td) {
+                $(td).removeClass("focus-item focus-column focus-row focus-row-error focus-column-error");
+            });
 
-        for(var i=0; i<word.length; i++) {
-            if(!error) {
-                if(this.draw_table[state][word[i]] != '-') {
-                    state = this.draw_table[state][word[i]];
-                } else {
-                    error = true;
+            for(var i=0; i<word.length; i++) {
+                if(!error) {
+                    if(this.draw_table[state][word[i]] != '-') {
+                        state = this.draw_table[state][word[i]];
+                    } else {
+                        error = true;
+                    }
                 }
             }
-        }
 
+            this.highlight(error, state, word);
+
+            return !error;
+        }
+        return false;
+    }
+
+
+    highlight(error, state, word) {
         if(!error) {
             var row = this.table_element.find("tr#row[data-row='" + (state - 1) + "']");
             $(row).find("td").each(function() {
@@ -114,8 +124,33 @@ class FiniteAutomata{
                 }
             });
         }
+    }
 
-        return !error;
+
+    validate(word) {
+        if(this.draw_table.length > 0) {
+            this.table_element.find("td").each(function(i, td) {
+                $(td).removeClass("focus-item focus-column focus-row focus-row-error focus-column-error");
+            });
+
+            var state = 0,
+                error = false;
+
+            for(var i=0; i<word.length; i++) {
+                if(!error) {
+                    if(this.draw_table[state][word[i]] != '-') {
+                        state = this.draw_table[state][word[i]];
+                    } else {
+                        error = true;
+                    }
+                }
+            }
+
+            error = (this.draw_table[state]["final"] == 1);
+
+            return error;
+        }
+        return false;
     }
 
 }
