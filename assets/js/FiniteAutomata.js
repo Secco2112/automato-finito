@@ -18,6 +18,7 @@ class FiniteAutomata{
     }
 
     addToken(token) {
+        token = token.toLowerCase();
         this.tokens.push(token);
         return this;
     }

@@ -32,12 +32,16 @@ function addToken() {
         }
     }
 
-    $("input[name='input-token']").on("keypress", function(e) {
+    $("input[name='input-token']").on("keyup", function(e) {
         if(e.key == "Enter") {
             var value = $(this).val();
             value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
             helperAddToken(value);
             $(this).val("");
+        } else {
+            var value = $(this).val();
+            value = value.toLowerCase();
+            $(this).val(value);
         }
     });
 }
@@ -70,6 +74,7 @@ function handleTestTokenInput() {
         } else {
             var text = $(this).val();
             text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            text = text.toLowerCase();
 
             $(".word-listener").empty();
 
@@ -136,8 +141,6 @@ function generateStates() {
             if(i == word.length - 1) states[current_state]['final'] = 1;
         }
     });
-
-    console.log(states);
 
     finite_automata.setStates(states);
 }
